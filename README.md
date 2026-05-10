@@ -8,15 +8,15 @@
 
 ---
 
-## ✨ Key Features
+##  Key Features
 
-- 📸 **Receipt Scanning**: Capture bills directly using your camera (coming soon: AI-powered OCR).
-- 👥 **Group Management**: Add friends and group members effortlessly.
-- ⚖️ **Flexible Splitting**: Split by percentage, exact amounts, or equally.
-- 📄 **PDF Export**: Generate professional PDF summaries of your shared expenses.
-- 🔒 **Secure Access**: Protect your financial data with Biometric Authentication (Fingerprint/FaceID).
-- 📤 **Easy Sharing**: Share split details instantly via WhatsApp, Email, or other platforms.
-- 🌓 **Modern UI**: Beautifully designed interface with Google Fonts integration.
+-  **Receipt Scanning**: Capture bills directly using your camera (coming soon: AI-powered OCR).
+-  **Group Management**: Add friends and group members effortlessly.
+-  **Flexible Splitting**: Split by percentage, exact amounts, or equally.
+-  **PDF Export**: Generate professional PDF summaries of your shared expenses.
+-  **Secure Access**: Protect your financial data with Biometric Authentication (Fingerprint/FaceID).
+-  **Easy Sharing**: Share split details instantly via WhatsApp, Email, or other platforms.
+-  **Modern UI**: Beautifully designed interface with Google Fonts integration.
 
 ---
 
@@ -39,7 +39,7 @@
 
 ---
 
-## 🚀 Getting Started
+##  Getting Started
 
 ### Prerequisites
 
@@ -71,7 +71,7 @@
 
 ---
 
-## 📂 Project Structure
+##  Project Structure
 
 ```text
 lib/
@@ -85,7 +85,7 @@ lib/
 
 ---
 
-## 🤝 Contributing
+##  Contributing
 
 Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
@@ -97,13 +97,13 @@ Contributions are what make the open-source community such an amazing place to l
 
 ---
 
-## 📜 License
+##  License
 
 Distributed under the MIT License. See `LICENSE` for more information.
 
 ---
 
-## 📧 Contact
+##  Contact
 
 **Hassaan Khalid** - [GitHub](https://github.com/hassaankhalid225)  
 Project Link: [https://github.com/hassaankhalid225/SplitEase-App](https://github.com/hassaankhalid225/SplitEase-App)
