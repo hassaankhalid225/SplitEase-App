@@ -8,6 +8,12 @@
 
 ---
 
+## 🚀 Download APK
+
+[![Download APK](https://img.shields.io/badge/Download-APK-green?style=for-the-badge&logo=android)](https://drive.google.com/file/d/1sSuXnJ71K_yGxhOWO6FEQI2wspFeq9gQ/view?usp=sharing)
+
+---
+
 ##  Key Features
 
 -  **Receipt Scanning**: Capture bills directly using your camera (coming soon: AI-powered OCR).
