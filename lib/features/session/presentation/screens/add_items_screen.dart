@@ -205,7 +205,20 @@ class _AddItemsScreenState extends State<AddItemsScreen> {
                           return ItemCard(
                             item: item,
                             currency: session.currency,
-                            onDelete: () => provider.removeItem(item.id),
+                            onDelete: () {
+                              provider.removeItem(item.id);
+                              ScaffoldMessenger.of(context).clearSnackBars();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: const Text('Item removed'),
+                                  duration: const Duration(seconds: 5),
+                                  action: SnackBarAction(
+                                    label: 'Undo',
+                                    onPressed: () => provider.undoDeleteItem(),
+                                  ),
+                                ),
+                              );
+                            },
                           );
                         },
                       ),

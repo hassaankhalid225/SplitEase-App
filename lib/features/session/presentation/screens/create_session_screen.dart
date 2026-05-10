@@ -57,36 +57,36 @@ class _CreateSessionScreenState extends State<CreateSessionScreen> {
     }
   }
 
-  Future<void> _pickImage() async {
-    final picker = ImagePicker();
-    final source = await showModalBottomSheet<ImageSource>(
-      context: context,
-      builder: (context) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: const Icon(Icons.camera_alt),
-              title: const Text('Camera'),
-              onTap: () => Navigator.pop(context, ImageSource.camera),
-            ),
-            ListTile(
-              leading: const Icon(Icons.photo_library),
-              title: const Text('Gallery'),
-              onTap: () => Navigator.pop(context, ImageSource.gallery),
-            ),
-          ],
-        ),
-      ),
-    );
+  // Future<void> _pickImage() async {
+  //   final picker = ImagePicker();
+  //   final source = await showModalBottomSheet<ImageSource>(
+  //     context: context,
+  //     builder: (context) => SafeArea(
+  //       child: Column(
+  //         mainAxisSize: MainAxisSize.min,
+  //         children: [
+  //           ListTile(
+  //             leading: const Icon(Icons.camera_alt),
+  //             title: const Text('Camera'),
+  //             onTap: () => Navigator.pop(context, ImageSource.camera),
+  //           ),
+  //           ListTile(
+  //             leading: const Icon(Icons.photo_library),
+  //             title: const Text('Gallery'),
+  //             onTap: () => Navigator.pop(context, ImageSource.gallery),
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
 
-    if (source != null) {
-      final image = await picker.pickImage(source: source);
-      if (image != null && mounted) {
-        context.read<SessionProvider>().updateReceiptImage(image.path);
-      }
-    }
-  }
+  //   if (source != null) {
+  //     final image = await picker.pickImage(source: source);
+  //     if (image != null && mounted) {
+  //       context.read<SessionProvider>().updateReceiptImage(image.path);
+  //     }
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -200,6 +200,7 @@ class _CreateSessionScreenState extends State<CreateSessionScreen> {
                         ),
                       ),
                       const SizedBox(height: 32),
+                      /*
                       Text(
                         'Receipt Photo (Optional)',
                         style: AppTypography.bodyMedium.copyWith(
@@ -262,6 +263,7 @@ class _CreateSessionScreenState extends State<CreateSessionScreen> {
                         ),
                       ),
                       const SizedBox(height: 32),
+                      */
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
@@ -293,7 +295,20 @@ class _CreateSessionScreenState extends State<CreateSessionScreen> {
                         runSpacing: 8,
                         children: provider.currentSession?.people.map((person) => PersonChip(
                           name: person.name,
-                          onDeleted: () => provider.removePerson(person.id),
+                          onDeleted: () {
+                            provider.removePerson(person.id);
+                            ScaffoldMessenger.of(context).clearSnackBars();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: const Text('Person removed'),
+                                duration: const Duration(seconds: 5),
+                                action: SnackBarAction(
+                                  label: 'Undo',
+                                  onPressed: () => provider.undoDeletePerson(),
+                                ),
+                              ),
+                            );
+                          },
                         )).toList() ?? [],
                       ),
                       if (provider.currentSession?.people.isEmpty ?? true)

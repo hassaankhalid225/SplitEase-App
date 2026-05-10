@@ -52,26 +52,26 @@ class ResultScreen extends StatelessWidget {
     Share.share(buffer.toString());
   }
 
-  void _viewReceipt(BuildContext context, String path) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => Scaffold(
-          backgroundColor: Colors.black,
-          appBar: AppBar(
-            backgroundColor: Colors.black,
-            iconTheme: const IconThemeData(color: Colors.white),
-          ),
-          body: Center(
-            child: Hero(
-              tag: 'receipt_photo',
-              child: Image.file(File(path)),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+  // void _viewReceipt(BuildContext context, String path) {
+  //   Navigator.push(
+  //     context,
+  //     MaterialPageRoute(
+  //       builder: (context) => Scaffold(
+  //         backgroundColor: Colors.black,
+  //         appBar: AppBar(
+  //           backgroundColor: Colors.black,
+  //           iconTheme: const IconThemeData(color: Colors.white),
+  //         ),
+  //         body: Center(
+  //           child: Hero(
+  //             tag: 'receipt_photo',
+  //             child: Image.file(File(path)),
+  //           ),
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -124,6 +124,7 @@ class ResultScreen extends StatelessWidget {
                             color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
                           ),
                         ),
+                        /*
                         if (session.receiptImagePath != null)
                           IconButton(
                             onPressed: () => _viewReceipt(context, session.receiptImagePath!),
@@ -133,6 +134,7 @@ class ResultScreen extends StatelessWidget {
                             ),
                             tooltip: 'View Receipt',
                           ),
+                        */
                       ],
                     ),
                     const SizedBox(height: 8),

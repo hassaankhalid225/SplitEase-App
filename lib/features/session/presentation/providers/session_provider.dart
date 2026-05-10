@@ -24,6 +24,13 @@ class SessionProvider with ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
+  // Undo tracking
+  PersonModel? _lastDeletedPerson;
+  Map<String, double>? _lastDeletedPersonShares; // itemId -> share
+  ItemModel? _lastDeletedItem;
+  SessionModel? _lastDeletedSession;
+  int? _lastDeletedSessionIndex;
+
   SessionProvider() {
     loadRecentSessions();
   }
@@ -94,16 +101,48 @@ class SessionProvider with ChangeNotifier {
 
   void removePerson(String id) {
     if (_currentSession != null) {
+      final personIndex = _currentSession!.people.indexWhere((p) => p.id == id);
+      if (personIndex == -1) return;
+
+      _lastDeletedPerson = _currentSession!.people[personIndex];
+      _lastDeletedPersonShares = {};
+      
       final updatedPeople = _currentSession!.people.where((p) => p.id != id).toList();
       final updatedItems = _currentSession!.items.map((item) {
         final updatedShares = Map<String, double>.from(item.assignedShares);
-        updatedShares.remove(id);
+        if (updatedShares.containsKey(id)) {
+          _lastDeletedPersonShares![item.id] = updatedShares[id]!;
+          updatedShares.remove(id);
+        }
         return item.copyWith(assignedShares: updatedShares);
       }).toList();
+
       _currentSession = _currentSession!.copyWith(
         people: updatedPeople,
         items: updatedItems,
       );
+      notifyListeners();
+    }
+  }
+
+  void undoDeletePerson() {
+    if (_currentSession != null && _lastDeletedPerson != null) {
+      final updatedPeople = [..._currentSession!.people, _lastDeletedPerson!];
+      final updatedItems = _currentSession!.items.map((item) {
+        if (_lastDeletedPersonShares?.containsKey(item.id) ?? false) {
+          final updatedShares = Map<String, double>.from(item.assignedShares);
+          updatedShares[_lastDeletedPerson!.id] = _lastDeletedPersonShares![item.id]!;
+          return item.copyWith(assignedShares: updatedShares);
+        }
+        return item;
+      }).toList();
+
+      _currentSession = _currentSession!.copyWith(
+        people: updatedPeople,
+        items: updatedItems,
+      );
+      _lastDeletedPerson = null;
+      _lastDeletedPersonShares = null;
       notifyListeners();
     }
   }
@@ -146,8 +185,21 @@ class SessionProvider with ChangeNotifier {
 
   void removeItem(String id) {
     if (_currentSession != null) {
+      final itemIndex = _currentSession!.items.indexWhere((i) => i.id == id);
+      if (itemIndex == -1) return;
+
+      _lastDeletedItem = _currentSession!.items[itemIndex];
       final updatedItems = _currentSession!.items.where((i) => i.id != id).toList();
       _currentSession = _currentSession!.copyWith(items: updatedItems);
+      notifyListeners();
+    }
+  }
+
+  void undoDeleteItem() {
+    if (_currentSession != null && _lastDeletedItem != null) {
+      final updatedItems = [..._currentSession!.items, _lastDeletedItem!];
+      _currentSession = _currentSession!.copyWith(items: updatedItems);
+      _lastDeletedItem = null;
       notifyListeners();
     }
   }
@@ -252,8 +304,22 @@ class SessionProvider with ChangeNotifier {
   }
 
   Future<void> deleteRecentSession(String sessionId) async {
-    await _storageService.deleteSession(sessionId);
-    await loadRecentSessions();
+    final index = _recentSessions.indexWhere((s) => s.id == sessionId);
+    if (index != -1) {
+      _lastDeletedSession = _recentSessions[index];
+      _lastDeletedSessionIndex = index;
+      await _storageService.deleteSession(sessionId);
+      await loadRecentSessions();
+    }
+  }
+
+  Future<void> undoDeleteSession() async {
+    if (_lastDeletedSession != null) {
+      await _storageService.saveSession(_lastDeletedSession!);
+      _lastDeletedSession = null;
+      _lastDeletedSessionIndex = null;
+      await loadRecentSessions();
+    }
   }
 
   void loadSession(SessionModel session) {

@@ -170,6 +170,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                 },
                                 onDelete: () {
                                   provider.deleteRecentSession(session.id);
+                                  ScaffoldMessenger.of(context).clearSnackBars();
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: const Text('Session deleted'),
+                                      duration: const Duration(seconds: 5),
+                                      action: SnackBarAction(
+                                        label: 'Undo',
+                                        onPressed: () => provider.undoDeleteSession(),
+                                      ),
+                                    ),
+                                  );
                                 },
                               );
                             },
