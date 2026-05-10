@@ -33,9 +33,13 @@
 
 ## 📸 Screenshots
 
-| Home Screen | Receipt Detail | Splitting Logic |
+| 🏠 Home Screen | ➕ Start Session | 🍔 Add Items |
 | :---: | :---: | :---: |
-| ![Home](https://via.placeholder.com/200x400?text=Home+Screen) | ![Details](https://via.placeholder.com/200x400?text=Receipt+Details) | ![Split](https://via.placeholder.com/200x400?text=Split+Logic) |
+| <img src="assets/3.jpeg" width="250"> | <img src="assets/2.jpeg" width="250"> | <img src="assets/4.jpeg" width="250"> |
+
+| 🤝 Assign Items | 💰 Final Result | 📄 PDF Report |
+| :---: | :---: | :---: |
+| <img src="assets/1.jpeg" width="250"> | <img src="assets/6.jpeg" width="250"> | <img src="assets/5.jpeg" width="250"> |
 
 ---
 
