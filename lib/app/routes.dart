@@ -5,6 +5,8 @@ import '../features/session/presentation/screens/add_items_screen.dart';
 import '../features/session/presentation/screens/assign_items_screen.dart';
 import '../features/session/presentation/screens/result_screen.dart';
 import '../features/onboarding/presentation/screens/onboarding_screen.dart';
+import '../features/app_lock/presentation/screens/lock_screen.dart';
+import '../features/settings/presentation/screens/settings_screen.dart';
 
 class AppRoutes {
   static const String home = '/';
@@ -13,6 +15,8 @@ class AppRoutes {
   static const String assignItems = '/assign-items';
   static const String result = '/result';
   static const String onboarding = '/onboarding';
+  static const String lock = '/lock';
+  static const String settings = '/settings';
 
   static Map<String, WidgetBuilder> get routes => {
         home: (context) => const HomeScreen(),
@@ -21,6 +25,8 @@ class AppRoutes {
         assignItems: (context) => const AssignItemsScreen(),
         result: (context) => const ResultScreen(),
         onboarding: (context) => const OnboardingScreen(),
+        lock: (context) => const LockScreen(),
+        settings: (context) => const SettingsScreen(),
       };
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {

@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_typography.dart';
 import '../../../../app/routes.dart';
@@ -10,6 +9,7 @@ import '../../../../core/widgets/custom_button.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../providers/session_provider.dart';
 import '../widgets/result_person_card.dart';
+import '../../domain/pdf_generator.dart';
 
 class ResultScreen extends StatelessWidget {
   const ResultScreen({super.key});
@@ -260,10 +260,25 @@ class ResultScreen extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            CustomButton(
-              text: 'Share Summary',
-              icon: Icons.share_outlined,
-              onPressed: () => _shareSummary(context, provider),
+            Row(
+              children: [
+                Expanded(
+                  child: CustomButton(
+                    text: 'Share',
+                    icon: Icons.share_outlined,
+                    onPressed: () => _shareSummary(context, provider),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: CustomButton(
+                    text: 'PDF',
+                    icon: Icons.picture_as_pdf_outlined,
+                    isSecondary: true,
+                    onPressed: () => PdfGenerator.generateAndSave(session, result, provider.tipPercent),
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 12),
             Row(

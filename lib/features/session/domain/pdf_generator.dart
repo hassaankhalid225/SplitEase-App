@@ -1,0 +1,105 @@
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
+import '../data/models/session_model.dart';
+import '../../../core/utils/currency_formatter.dart';
+
+class PdfGenerator {
+  static Future<void> generateAndSave(SessionModel session, Map<String, double> results, double tipPercent) async {
+    final pdf = pw.Document();
+
+    final subtotal = session.items.fold(0.0, (sum, item) => sum + item.price);
+    final taxAmount = subtotal * (session.taxPercent / 100);
+    final serviceAmount = subtotal * (session.serviceChargePercent / 100);
+    final tipAmount = subtotal * (tipPercent / 100);
+    final total = subtotal + taxAmount + serviceAmount + tipAmount;
+
+    pdf.addPage(
+      pw.MultiPage(
+        pageFormat: PdfPageFormat.a4,
+        build: (context) => [
+          pw.Header(
+            level: 0,
+            child: pw.Row(
+              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+              children: [
+                pw.Text('SplitEase — Receipt Split', style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold, color: PdfColors.orange)),
+                pw.Text(session.createdAt.toString().split(' ')[0], style: const pw.TextStyle(fontSize: 12)),
+              ],
+            ),
+          ),
+          pw.SizedBox(height: 20),
+          pw.Text('Session: ${session.name}', style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
+          pw.Text('Currency: ${session.currency}'),
+          pw.SizedBox(height: 20),
+
+          pw.Text('Itemized Breakdown', style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold)),
+          pw.SizedBox(height: 10),
+          pw.TableHelper.fromTextArray(
+            headerStyle: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+            headers: ['Item Name', 'Price', 'Assigned To'],
+            data: session.items.map((item) {
+              final assignedNames = session.people
+                  .where((p) => item.assignedShares.containsKey(p.id))
+                  .map((p) => p.name)
+                  .join(', ');
+              return [item.name, CurrencyFormatter.format(item.price, currency: session.currency), assignedNames];
+            }).toList(),
+          ),
+
+          pw.SizedBox(height: 30),
+          pw.Text('Individual Summary', style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold)),
+          pw.SizedBox(height: 10),
+          pw.TableHelper.fromTextArray(
+            headerStyle: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+            headers: ['Person', 'Subtotal Share', 'Tax & Service', 'Tip', 'Total Owed'],
+            data: session.people.map((person) {
+              final amount = results[person.id] ?? 0.0;
+              // Roughly estimate subtotal share for display
+              final personItems = session.items.where((i) => i.assignedShares.containsKey(person.id)).toList();
+              double personSubtotal = 0;
+              for (var item in personItems) {
+                final totalShares = item.assignedShares.values.fold(0.0, (s, v) => s + v);
+                personSubtotal += (item.price * (item.assignedShares[person.id]! / totalShares));
+              }
+              
+              final personTaxService = personSubtotal * ((session.taxPercent + session.serviceChargePercent) / 100);
+              final personTip = personSubtotal * (tipPercent / 100);
+              
+              return [
+                person.name,
+                CurrencyFormatter.format(personSubtotal, currency: session.currency),
+                CurrencyFormatter.format(personTaxService, currency: session.currency),
+                CurrencyFormatter.format(personTip, currency: session.currency),
+                CurrencyFormatter.format(amount, currency: session.currency),
+              ];
+            }).toList(),
+          ),
+
+          pw.SizedBox(height: 30),
+          pw.Container(
+            alignment: pw.Alignment.centerRight,
+            child: pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.end,
+              children: [
+                pw.Text('Subtotal: ${CurrencyFormatter.format(subtotal, currency: session.currency)}'),
+                pw.Text('Tax (${session.taxPercent}%): ${CurrencyFormatter.format(taxAmount, currency: session.currency)}'),
+                pw.Text('Service (${session.serviceChargePercent}%): ${CurrencyFormatter.format(serviceAmount, currency: session.currency)}'),
+                pw.Text('Tip (${tipPercent.toInt()}%): ${CurrencyFormatter.format(tipAmount, currency: session.currency)}'),
+                pw.Divider(),
+                pw.Text('Grand Total: ${CurrencyFormatter.format(total, currency: session.currency)}', style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
+              ],
+            ),
+          ),
+
+          pw.Container(
+            padding: const pw.EdgeInsets.only(top: 20),
+            child: pw.Center(child: pw.Text('Generated by SplitEase', style: const pw.TextStyle(fontSize: 10, color: PdfColors.grey))),
+          ),
+        ],
+      ),
+    );
+
+    await Printing.layoutPdf(onLayout: (PdfPageFormat format) async => pdf.save());
+  }
+}

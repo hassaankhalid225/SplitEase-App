@@ -8,6 +8,7 @@ void main() async {
   
   final prefs = await SharedPreferences.getInstance();
   final bool hasSeenOnboarding = prefs.getBool('has_seen_onboarding') ?? false;
+  // final bool isLockEnabled = prefs.getBool('app_lock_enabled') ?? false;
    
   // Set system UI overlay style
   SystemChrome.setSystemUIOverlayStyle(
@@ -19,5 +20,8 @@ void main() async {
     ),
   );
 
-  runApp(SplitEaseApp(showOnboarding: !hasSeenOnboarding));
+  runApp(SplitEaseApp(
+    showOnboarding: !hasSeenOnboarding,
+    startLocked: false, // isLockEnabled,
+  ));
 }

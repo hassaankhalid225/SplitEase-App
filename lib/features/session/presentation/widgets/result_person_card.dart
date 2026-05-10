@@ -1,3 +1,9 @@
+import 'package:flutter/material.dart';
+import '../../../../app/theme/app_colors.dart';
+import '../../../../app/theme/app_typography.dart';
+import '../../../session/data/models/person_model.dart';
+import '../../../session/data/models/item_model.dart';
+import '../../../../core/utils/currency_formatter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ResultPersonCard extends StatelessWidget {
@@ -105,6 +111,18 @@ class ResultPersonCard extends StatelessWidget {
                     Text(
                       CurrencyFormatter.format(amount, currency: currency),
                       style: AppTypography.h3.copyWith(color: AppColors.primary),
+                    ),
+                    const SizedBox(height: 4),
+                    GestureDetector(
+                      onTap: () => _launchWhatsApp(context),
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: const Color(0x1A25D366),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(Icons.chat, color: Color(0xFF25D366), size: 20),
+                      ),
                     ),
                   ],
                 ),

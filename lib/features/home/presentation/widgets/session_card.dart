@@ -8,12 +8,14 @@ import 'package:intl/intl.dart';
 class SessionCard extends StatelessWidget {
   final SessionModel session;
   final VoidCallback onTap;
+  final VoidCallback onEdit;
   final VoidCallback onDelete;
 
   const SessionCard({
     super.key,
     required this.session,
     required this.onTap,
+    required this.onEdit,
     required this.onDelete,
   });
 
@@ -79,12 +81,29 @@ class SessionCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 8),
-                Text(
-                  CurrencyFormatter.format(total, currency: session.currency),
-                  style: AppTypography.bodyLarge.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.primary,
-                  ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      CurrencyFormatter.format(total, currency: session.currency),
+                      style: AppTypography.bodyLarge.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    GestureDetector(
+                      onTap: onEdit,
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: AppColors.primary.withValues(alpha: 0.1),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(Icons.edit, color: AppColors.primary, size: 14),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

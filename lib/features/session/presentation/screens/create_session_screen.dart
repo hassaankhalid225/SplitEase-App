@@ -251,11 +251,11 @@ class _CreateSessionScreenState extends State<CreateSessionScreen> {
                                     ),
                                   ],
                                 )
-                              : const Column(
+                              : Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Icon(Icons.camera_alt_outlined, color: AppColors.primary, size: 32),
-                                    SizedBox(height: 8),
+                                    const Icon(Icons.camera_alt_outlined, color: AppColors.primary, size: 32),
+                                    const SizedBox(height: 8),
                                     Text('Tap to attach receipt photo', style: AppTypography.bodySmall),
                                   ],
                                 ),
@@ -339,7 +339,7 @@ class _CreateSessionScreenState extends State<CreateSessionScreen> {
     return await showDialog<bool>(
           context: context,
           builder: (context) => AlertDialog(
-            title: const Text(_isEditMode ? 'Discard Edits?' : 'Discard Changes?'),
+            title: Text(_isEditMode ? 'Discard Edits?' : 'Discard Changes?'),
             content: Text(_isEditMode ? 'Are you sure you want to discard your edits?' : 'Are you sure you want to exit? You will lose the current session data.'),
             actions: [
               TextButton(
