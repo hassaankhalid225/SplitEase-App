@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../features/session/presentation/providers/session_provider.dart';
+import '../features/settings/presentation/providers/settings_provider.dart';
 import 'theme/app_theme.dart';
 import 'routes.dart';
 import '../services/auth/app_lock_service.dart';
@@ -8,8 +9,16 @@ import '../services/auth/app_lock_service.dart';
 class SplitEaseApp extends StatefulWidget {
   final bool showOnboarding;
   final bool startLocked;
-  
-  const SplitEaseApp({super.key, required this.showOnboarding, required this.startLocked});
+  final ThemeMode initialThemeMode;
+  final String initialCurrency;
+
+  const SplitEaseApp({
+    super.key,
+    required this.showOnboarding,
+    required this.startLocked,
+    this.initialThemeMode = ThemeMode.system,
+    this.initialCurrency = 'PKR',
+  });
 
   @override
   State<SplitEaseApp> createState() => _SplitEaseAppState();
@@ -53,16 +62,24 @@ class _SplitEaseAppState extends State<SplitEaseApp> with WidgetsBindingObserver
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => SessionProvider()),
+        ChangeNotifierProvider(
+          create: (_) => SettingsProvider(
+            themeMode: widget.initialThemeMode,
+            defaultCurrency: widget.initialCurrency,
+          ),
+        ),
       ],
-      child: MaterialApp(
-        navigatorKey: _navigatorKey,
-        title: 'SplitEase',
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.lightTheme,
-        darkTheme: AppTheme.darkTheme,
-        themeMode: ThemeMode.system,
-        initialRoute: widget.showOnboarding ? AppRoutes.onboarding : AppRoutes.home,
-        onGenerateRoute: AppRoutes.onGenerateRoute,
+      child: Consumer<SettingsProvider>(
+        builder: (context, settings, _) => MaterialApp(
+          navigatorKey: _navigatorKey,
+          title: 'SplitEase',
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme.lightTheme,
+          darkTheme: AppTheme.darkTheme,
+          themeMode: settings.themeMode,
+          initialRoute: widget.showOnboarding ? AppRoutes.onboarding : AppRoutes.home,
+          onGenerateRoute: AppRoutes.onGenerateRoute,
+        ),
       ),
     );
   }

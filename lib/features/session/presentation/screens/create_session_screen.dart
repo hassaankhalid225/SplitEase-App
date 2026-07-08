@@ -32,13 +32,15 @@ class _CreateSessionScreenState extends State<CreateSessionScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final provider = context.read<SessionProvider>();
-      if (provider.currentSession != null && provider.currentSession!.name.isNotEmpty) {
-        setState(() {
+      final session = provider.currentSession;
+      if (session == null) return;
+      setState(() {
+        _selectedCurrency = session.currency;
+        if (session.name.isNotEmpty) {
           _isEditMode = true;
-          _nameController.text = provider.currentSession!.name;
-          _selectedCurrency = provider.currentSession!.currency;
-        });
-      }
+          _nameController.text = session.name;
+        }
+      });
     });
   }
 

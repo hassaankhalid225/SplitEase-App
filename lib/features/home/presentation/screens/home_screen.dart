@@ -7,6 +7,7 @@ import '../../../../core/constants/app_strings.dart';
 import '../../../../core/widgets/custom_button.dart';
 import '../../../../core/widgets/empty_state_widget.dart';
 import '../../../session/presentation/providers/session_provider.dart';
+import '../../../settings/presentation/providers/settings_provider.dart';
 import '../widgets/session_card.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -120,7 +121,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 text: AppStrings.newSession,
                 icon: Icons.add_circle_outline,
                 onPressed: () {
-                  provider.startNewSession();
+                  provider.startNewSession(
+                    context.read<SettingsProvider>().defaultCurrency,
+                  );
                   Navigator.pushNamed(context, AppRoutes.createSession);
                 },
               ),

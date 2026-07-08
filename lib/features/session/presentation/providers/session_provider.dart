@@ -46,11 +46,11 @@ class SessionProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void startNewSession() {
+  void startNewSession([String currency = 'PKR']) {
     _currentSession = SessionModel(
       id: const Uuid().v4(),
       name: '',
-      currency: 'PKR',
+      currency: currency,
       people: [],
       items: [],
       taxPercent: 0.0,
