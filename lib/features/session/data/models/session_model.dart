@@ -9,7 +9,9 @@ class SessionModel {
   final List<ItemModel> items;
   final double taxPercent;
   final double serviceChargePercent;
+  final double tipPercent;
   final String? receiptImagePath;
+  final String? payerId;
   final DateTime createdAt;
 
   SessionModel({
@@ -20,7 +22,9 @@ class SessionModel {
     required this.items,
     required this.taxPercent,
     required this.serviceChargePercent,
+    this.tipPercent = 0.0,
     this.receiptImagePath,
+    this.payerId,
     required this.createdAt,
   });
 
@@ -33,7 +37,9 @@ class SessionModel {
       'items': items.map((i) => i.toJson()).toList(),
       'taxPercent': taxPercent,
       'serviceChargePercent': serviceChargePercent,
+      'tipPercent': tipPercent,
       'receiptImagePath': receiptImagePath,
+      'payerId': payerId,
       'createdAt': createdAt.toIso8601String(),
     };
   }
@@ -47,7 +53,9 @@ class SessionModel {
       items: (json['items'] as List).map((i) => ItemModel.fromJson(i)).toList(),
       taxPercent: (json['taxPercent'] as num).toDouble(),
       serviceChargePercent: (json['serviceChargePercent'] as num).toDouble(),
+      tipPercent: (json['tipPercent'] as num?)?.toDouble() ?? 0.0,
       receiptImagePath: json['receiptImagePath'],
+      payerId: json['payerId'],
       createdAt: DateTime.parse(json['createdAt']),
     );
   }
@@ -60,7 +68,10 @@ class SessionModel {
     List<ItemModel>? items,
     double? taxPercent,
     double? serviceChargePercent,
+    double? tipPercent,
     String? receiptImagePath,
+    String? payerId,
+    bool clearPayerId = false,
     DateTime? createdAt,
   }) {
     return SessionModel(
@@ -71,7 +82,9 @@ class SessionModel {
       items: items ?? this.items,
       taxPercent: taxPercent ?? this.taxPercent,
       serviceChargePercent: serviceChargePercent ?? this.serviceChargePercent,
+      tipPercent: tipPercent ?? this.tipPercent,
       receiptImagePath: receiptImagePath ?? this.receiptImagePath,
+      payerId: clearPayerId ? null : (payerId ?? this.payerId),
       createdAt: createdAt ?? this.createdAt,
     );
   }

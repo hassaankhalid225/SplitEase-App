@@ -1,4 +1,4 @@
-package app.hassaan.splitease
+package com.hassaan.splitease
 
 import io.flutter.embedding.android.FlutterFragmentActivity
 

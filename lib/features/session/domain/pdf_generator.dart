@@ -3,10 +3,24 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import '../data/models/session_model.dart';
 import '../../../core/utils/currency_formatter.dart';
+import 'settlement_calculator.dart';
 
 class PdfGenerator {
-  static Future<void> generateAndSave(SessionModel session, Map<String, double> results, double tipPercent) async {
+  static Future<void> generateAndSave(
+    SessionModel session,
+    Map<String, double> results,
+    double tipPercent, {
+    List<SettlementTransfer> settlements = const [],
+  }) async {
     final pdf = pw.Document();
+
+    String personName(String? id) {
+      if (id == null) return 'Unknown';
+      for (final p in session.people) {
+        if (p.id == id) return p.name;
+      }
+      return 'Unknown';
+    }
 
     final subtotal = session.items.fold(0.0, (sum, item) => sum + item.price);
     final taxAmount = subtotal * (session.taxPercent / 100);
@@ -77,6 +91,32 @@ class PdfGenerator {
           ),
 
           pw.SizedBox(height: 30),
+
+          if (session.payerId != null) ...[
+            pw.Text(
+              'Paid by: ${personName(session.payerId)}',
+              style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold),
+            ),
+            pw.SizedBox(height: 10),
+          ],
+
+          if (settlements.isNotEmpty) ...[
+            pw.Text('Settlement', style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold)),
+            pw.SizedBox(height: 10),
+            pw.TableHelper.fromTextArray(
+              headerStyle: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+              headers: ['From', 'To', 'Amount'],
+              data: settlements.map((t) {
+                return [
+                  personName(t.fromPersonId),
+                  personName(t.toPersonId),
+                  CurrencyFormatter.format(t.amount, currency: session.currency),
+                ];
+              }).toList(),
+            ),
+            pw.SizedBox(height: 30),
+          ],
+
           pw.Container(
             alignment: pw.Alignment.centerRight,
             child: pw.Column(

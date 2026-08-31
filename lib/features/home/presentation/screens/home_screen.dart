@@ -9,6 +9,7 @@ import '../../../../core/widgets/empty_state_widget.dart';
 import '../../../session/presentation/providers/session_provider.dart';
 import '../../../settings/presentation/providers/settings_provider.dart';
 import '../widgets/session_card.dart';
+import '../widgets/stats_card.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -73,7 +74,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               const SizedBox(height: 24),
-              
+
+              // Spending Stats Card
+              if (provider.recentSessions.isNotEmpty) ...[
+                StatsCard(
+                  sessions: provider.recentSessions,
+                  defaultCurrency: context.read<SettingsProvider>().defaultCurrency,
+                ),
+                const SizedBox(height: 24),
+              ],
+
               // Search Bar
               TextField(
                 onChanged: (v) => setState(() => _searchQuery = v),

@@ -25,7 +25,7 @@ class SessionCard extends StatelessWidget {
     
     // Calculate total
     double subtotal = session.items.fold(0, (sum, item) => sum + item.price);
-    double total = subtotal * (1 + (session.taxPercent + session.serviceChargePercent) / 100);
+    double total = subtotal * (1 + (session.taxPercent + session.serviceChargePercent + session.tipPercent) / 100);
 
     return Dismissible(
       key: Key(session.id),

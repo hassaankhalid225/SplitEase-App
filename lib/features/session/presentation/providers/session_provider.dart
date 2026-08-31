@@ -106,7 +106,7 @@ class SessionProvider with ChangeNotifier {
 
       _lastDeletedPerson = _currentSession!.people[personIndex];
       _lastDeletedPersonShares = {};
-      
+
       final updatedPeople = _currentSession!.people.where((p) => p.id != id).toList();
       final updatedItems = _currentSession!.items.map((item) {
         final updatedShares = Map<String, double>.from(item.assignedShares);
@@ -117,9 +117,11 @@ class SessionProvider with ChangeNotifier {
         return item.copyWith(assignedShares: updatedShares);
       }).toList();
 
+      final wasPayer = _currentSession!.payerId == id;
       _currentSession = _currentSession!.copyWith(
         people: updatedPeople,
         items: updatedItems,
+        clearPayerId: wasPayer,
       );
       notifyListeners();
     }
@@ -216,7 +218,20 @@ class SessionProvider with ChangeNotifier {
 
   void updateTipPercent(double tip) {
     _tipPercent = tip;
+    if (_currentSession != null) {
+      _currentSession = _currentSession!.copyWith(tipPercent: tip);
+    }
     calculateResult();
+  }
+
+  void setPayer(String? personId) {
+    if (_currentSession != null) {
+      _currentSession = _currentSession!.copyWith(
+        payerId: personId,
+        clearPayerId: personId == null,
+      );
+      notifyListeners();
+    }
   }
 
   void togglePersonInItem(String itemId, String personId) {
@@ -324,7 +339,7 @@ class SessionProvider with ChangeNotifier {
 
   void loadSession(SessionModel session) {
     _currentSession = session;
-    _tipPercent = 0.0;
+    _tipPercent = session.tipPercent;
     calculateResult();
     notifyListeners();
   }

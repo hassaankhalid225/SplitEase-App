@@ -89,7 +89,7 @@ class SettingsScreen extends StatelessWidget {
               children: [
                 ListTile(
                   title: Text('Version'),
-                  trailing: Text('1.1.0'),
+                  trailing: Text('1.3.0'),
                 ),
                 ListTile(
                   title: Text('Developer'),
